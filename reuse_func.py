@@ -1,7 +1,9 @@
 import configparser
+import os
 import time
 
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support.select import Select
 
 from Data.parameters import Data
@@ -27,6 +29,7 @@ class GetData():
         return config['config']['password']
 
     def get_driver(self):
+
         self.driver=webdriver.Chrome(executable_path=self.p.get_driver_path())
         return self.driver
 
@@ -44,7 +47,7 @@ class GetData():
         self.driver.find_element_by_id(Data.login).click()
         time.sleep(3)
 
-    def click_on_state(self,driver):
+    def click_on_state(self, driver):
         self.driver = driver
         self.driver.find_element_by_css_selector(Data.hyper_link).click()
         time.sleep(2)
@@ -62,10 +65,10 @@ class GetData():
         self.driver.find_element_by_id(Data.Dashboard).click()
         time.sleep(3)
         self.driver.find_element_by_id(Data.SAR).click()
-        time.sleep(3)
+        time.sleep(6)
         # self.driver.find_element_by_xpath("//*[@id='SAR']")
     def navigate_to_school_infrastructure(self):
-        self.driver.implicitly_wait(20)
+        self.driver.implicitly_wait(30)
         self.driver.find_element_by_id(Data.Dashboard).click()
         time.sleep(2)
         self.driver.find_element_by_xpath(Data.School_infra).click()
@@ -73,8 +76,9 @@ class GetData():
         self.driver.find_element_by_id(Data.Report).click()
 
     def navigate_to_school_infrastructure_map(self):
-        self.driver.implicitly_wait(20)
+        self.driver.implicitly_wait(30)
         self.driver.find_element_by_id(Data.Dashboard).click()
+        time.sleep(2)
         self.driver.find_element_by_xpath(Data.School_infra).click()
         time.sleep(2)
         self.driver.find_element_by_id(Data.Reportmap).click()
@@ -92,13 +96,13 @@ class GetData():
         self.driver.implicitly_wait(30)
         self.driver.find_element_by_id(Data.Dashboard).click()
         time.sleep(3)
-        #self.driver.find_element_by_id(Data.sr_by_id)
+        # self.driver.find_element_by_xpath("//a[@id='sr']/div/td[2]").click()
         self.driver.find_element_by_xpath("//*[@id='sr']").click()
         time.sleep(5)
 
 
     def navigate_to_crc_report(self):
-        self.driver.implicitly_wait(20)
+        self.driver.implicitly_wait(30)
         self.driver.find_element_by_id(Data.Dashboard).click()
         time.sleep(3)
         self.driver.find_element_by_id(Data.CRC).click()
@@ -217,18 +221,19 @@ class GetData():
             time.sleep(3)
 
     def test_mouse_over(self):
-            lists = self.driver.find_elements_by_class_name(Data.dots)
+        self.driver.implicitly_wait(20)
+        lists = self.driver.find_elements_by_class_name(Data.dots)
+        time.sleep(5)
+        def mouseover(i):
+            action = ActionChains(self.driver)
+            action.move_to_element(lists[i]).perform()
+            time.sleep(3)
+            del action
 
-            def mouseover(i):
-                action = ActionChains(self.driver)
-                action.move_to_element(lists[i]).perform()
-                time.sleep(3)
-                del action
-
-            i = 0
-            while i < len(lists):
-                mouseover(i)
-                i = i + 1
+        i = 0
+        while i < len(lists):
+            mouseover(i)
+            i = i + 1
 
     def Table_data(self):
         tabledata = self.driver.find_elements_by_xpath(Data.distrows)
@@ -259,5 +264,4 @@ class GetData():
             time.sleep(3)
             driver = cqube(self.driver)
             driver.CRC_footers()
-
 
